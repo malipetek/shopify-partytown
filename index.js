@@ -10,7 +10,7 @@ const request = require('request-promise');
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = 'read_products';
-const forwardingAddress = "https://malipetek-shopify-partytown-77654796cpx69-3000.githubpreview.dev";
+const forwardingAddress = process.env.HOST;
 
 app.use((req, res, next) => {
   console.log(req.path);
