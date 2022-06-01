@@ -10,11 +10,19 @@ const request = require('request-promise');
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = 'read_products';
-const forwardingAddress = "https://a344145d.ngrok.io"; // Replace this with your HTTPS Forwarding address
+const forwardingAddress = "https://malipetek-shopify-partytown-77654796cpx69-3000.githubpreview.dev";
+
+app.use((req, res, next) => {
+  console.log(req.path);
+  next();
+})
+
+app.use('/proxy', express.static('./proxy'));
 
 app.get('/', (req, res) => {
   res.send('Hello Justin!');
 });
+
 
 // Shopify install route
 app.get('/shopify', (req, res) => {
@@ -104,6 +112,7 @@ app.get('/shopify/callback', (req, res) => {
     res.status(400).send('Required parameters missing');
   }
 });
+
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
