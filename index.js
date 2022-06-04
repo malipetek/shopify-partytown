@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').config();
+require('isomorphic-fetch');
 const express = require('express');
 const app = express();
 const crypto = require('crypto');
@@ -23,6 +24,19 @@ app.get('/', (req, res) => {
   res.send('Hello Justin!');
 });
 
+app.get('/reverse-proxy', async (req, res) => {
+  const url = req.query.url;
+  const response = await fetch(url);
+  const responseContent = await response.text();
+  // set fetch response headers to res headers
+  // [...response.headers].forEach(([key, value]) => { 
+  //   res.setHeader(key, value);
+  // });
+  // set cors headers
+  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.send(responseContent);
+});
 
 // Shopify install route
 app.get('/shopify', (req, res) => {
