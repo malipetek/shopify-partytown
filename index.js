@@ -38,6 +38,10 @@ app.use('/reverse-proxy', async (req, res) => {
       res.setHeader(key, value);
     }
   });
+  // remove x-requested-with header
+  res.removeHeader('x-requested-with');
+  // remove powered-by-express header
+  res.removeHeader('x-powered-by');
   // set cors headers
   res.setHeader('Content-Type', 'application/javascript');
   res.setHeader('Access-Control-Allow-Origin', '*');
