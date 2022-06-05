@@ -34,7 +34,9 @@ app.use('/reverse-proxy', async (req, res) => {
   const responseContent = await response.text();
   // set fetch response headers to res headers
   [...response.headers].forEach(([key, value]) => { 
-    res.setHeader(key, value);
+    if (key.toLowerCase() == 'access-control-allow-methods') { 
+      res.setHeader(key, value);
+    }
   });
   // set cors headers
   res.setHeader('Content-Type', 'application/javascript');
