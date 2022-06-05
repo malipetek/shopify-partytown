@@ -28,7 +28,7 @@ app.use('/reverse-proxy', async (req, res) => {
   const url = req.query.url;
   const response = await fetch(url, {
     method: req.method,
-    headers: req.headers,
+    // headers: req.headers,
     body: req.body
   });
   const responseContent = await response.text();
