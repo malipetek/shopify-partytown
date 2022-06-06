@@ -1,5 +1,6 @@
 const dotenv = require('dotenv').config();
 require('isomorphic-fetch');
+const compression = require('compression');
 const express = require('express');
 const app = express();
 const crypto = require('crypto');
@@ -12,6 +13,8 @@ const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
 const scopes = 'read_products';
 const forwardingAddress = process.env.HOST;
+
+app.use(compression());
 
 app.use((req, res, next) => {
   console.log(req.path);
