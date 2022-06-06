@@ -45,6 +45,9 @@ app.use('/reverse-proxy', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   // allow all headers
   res.setHeader('Access-Control-Allow-Headers', '*');
+  // add a cache policy that caches for 1 day
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  
   res.send(responseContent);
 });
 
