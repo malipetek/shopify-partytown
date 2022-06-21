@@ -28,30 +28,34 @@ app.get('/', (req, res) => {
 });
 
 app.use('/reverse-proxy', async (req, res) => {
-  const url = req.query.url;
-  const response = await fetch(url, {
-    method: req.method,
-    // headers: req.headers,
-    body: req.body
-  });
-  const responseContent = await response.text();
-  // set fetch response headers to res headers
-  [...response.headers].forEach(([key, value]) => { 
-    if (key.toLowerCase() == 'access-control-allow-methods') { 
-      res.setHeader(key, value);
-    }
-  });
-  // remove powered-by-express header
-  res.removeHeader('x-powered-by');
-  // set cors headers
-  res.setHeader('Content-Type', 'application/javascript');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  // allow all headers
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  // add a cache policy that caches for 1 day
-  res.setHeader('Cache-Control', 'public, max-age=86400');
-  
-  res.send(responseContent);
+  try {
+    const url = req.query.url;
+    const response = await fetch(url, {
+      method: req.method,
+      // headers: req.headers,
+      body: req.body
+    });
+    const responseContent = await response.text();
+    // set fetch response headers to res headers
+    [...response.headers].forEach(([key, value]) => { 
+      if (key.toLowerCase() == 'access-control-allow-methods') { 
+        res.setHeader(key, value);
+      }
+    });
+    // remove powered-by-express header
+    res.removeHeader('x-powered-by');
+    // set cors headers
+    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // allow all headers
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    // add a cache policy that caches for 1 day
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    
+    res.send(responseContent);
+  } catch (err) {
+    res.status(500).send('Could not get resource');
+  }
 });
 
 // Shopify install route
