@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/proxy', express.static('./proxy'));
+app.use('/proxy', express.static('./static'));
 
 app.get('/', (req, res) => {
   res.send('Hello Justin!');
