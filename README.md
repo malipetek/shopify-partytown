@@ -1,9 +1,17 @@
-# Shopify Node.js + Express Application
+# Partytown.js service worker Server with app proxy + simple reverse proxy 
 
-This is a Node.js + Express Application that connects to Shopify. The application will authenticate with a shop, request a permanent access token, and then use that access token to make an API call.
+## Partytown
+This app serves partytown scripts at `/proxy` path to Shopify. These assets are meant to be loaded to the storefront through app proxy which means they become scripts served at first party.
+
+## Reverse Proxy
+Reverse proxy is for adding gzip and stripping headers of resources. However maybe it should be used 
 
 
-## License
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/jaayperez/shopify-node-express-app/blob/master/LICENSE)  
+## Deploy on Railway
+You can deploy with 1 click here.
+You will need env variables handy.
 
-This work by [Justin Perez](https://justinperez.com) is licensed under a <a rel="license" href="https://github.com/jaayperez/shopify-node-express-app/blob/master/LICENSE">MIT License Copyright © 2020</a>.
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/YK6PSO?referralCode=g0Vyyu)
+
+## A bit more explanation
+https://www.youtube.com/watch?v=f_n-YPq2ZAg

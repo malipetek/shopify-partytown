@@ -7,7 +7,6 @@ const crypto = require('crypto');
 const cookie = require('cookie');
 const nonce = require('nonce')();
 const querystring = require('querystring');
-const request = require('request-promise');
 
 const apiKey = process.env.SHOPIFY_API_KEY;
 const apiSecret = process.env.SHOPIFY_API_SECRET;
@@ -24,7 +23,7 @@ app.use((req, res, next) => {
 app.use('/proxy', express.static('./static'));
 
 app.get('/', (req, res) => {
-  res.send('Hello Justin!');
+  res.send('Your server is up. Add shop parameter to url to start a install on a shop. eg /shopify?shop=xxx.myshopify.com');
 });
 
 app.use('/reverse-proxy', async (req, res) => {
@@ -78,7 +77,7 @@ app.get('/shopify', (req, res) => {
 });
 
 // Shopify callback route
-app.get('/shopify/callback', (req, res) => {
+app.get('/shopify/callback', async (req, res) => {
   const { shop, hmac, code, state } = req.query;
   const stateCookie = cookie.parse(req.headers.cookie).state;
 
@@ -121,26 +120,33 @@ app.get('/shopify/callback', (req, res) => {
       code,
     };
 
-    request.post(accessTokenRequestUrl, { json: accessTokenPayload })
-    .then((accessTokenResponse) => {
-      const accessToken = accessTokenResponse.access_token;
-      // DONE: Use access token to make API call to 'shop' endpoint
-      const shopRequestUrl = 'https://' + shop + '/admin/api/2020-01/shop.json';
-      const shopRequestHeaders = {
-        'X-Shopify-Access-Token': accessToken,
-      };
+    fetch(accessTokenRequestUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(accessTokenPayload),
+    })
+      .then((accessTokenResponse) => accessTokenResponse.json())
+      .then((accessTokenResponse) => {
+        const accessToken = accessTokenResponse.access_token;
+        const shopRequestUrl = 'https://' + shop + '/admin/api/2020-01/shop.json';
+        const shopRequestHeaders = {
+          'X-Shopify-Access-Token': accessToken,
+        };
 
-      request.get(shopRequestUrl, { headers: shopRequestHeaders })
-      .then((shopResponse) => {
-        res.status(200).end(shopResponse);
+        fetch(shopRequestUrl, { headers: shopRequestHeaders })
+          .then((shopResponse) => shopResponse.json())
+          .then((shopResponse) => {
+            res.status(200).end(shopResponse);
+          })
+          .catch((error) => {
+            res.status(error.statusCode).send(error.error.error_description);
+          });
       })
       .catch((error) => {
         res.status(error.statusCode).send(error.error.error_description);
       });
-    })
-    .catch((error) => {
-      res.status(error.statusCode).send(error.error.error_description);
-    });
 
   } else {
     res.status(400).send('Required parameters missing');

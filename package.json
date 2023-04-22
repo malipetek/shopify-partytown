@@ -24,8 +24,6 @@
     "express": "^4.17.2",
     "isomorphic-fetch": "^3.0.0",
     "nodemon": "^2.0.16",
-    "nonce": "^1.0.4",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6"
+    "nonce": "^1.0.4"
   }
 }
